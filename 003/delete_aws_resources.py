@@ -81,24 +81,20 @@ def delete_athena_query_results(bucket_name):
     except ClientError as e:
         print(f"Error deleting Athena query results: {e}")
 
-    # terminate_ec2_instances()
-    # delete_rds_instances()
-    # Replace `your-s3-bucket-name` with the S3 bucket storing Athena query results
-    
     
 def main():
     print("Deleting all resources in AWS account...")
-    delete_glue_resources()
     bucket_names = [ 
-        "sports-analytics-data-lake-974325",
-        "sports-analytics-data-lake-974326",
-        "aws-glue-demo-tutorial-series-001",
+        "sports-analytics-data-lake-974328",
     ]
     # bucket_names = [ ]
 
+    delete_glue_resources()
     delete_s3_buckets(bucket_names)
+
     for bucket in bucket_names:
         delete_athena_query_results(bucket_name=bucket)
+    
     print("All specified resources deleted successfully.")
 
 if __name__ == "__main__":

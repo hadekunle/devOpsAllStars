@@ -10,8 +10,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # AWS configurations
-region                 =  os.getenv("region")
+region                 =  os.getenv("region","us-east-1")
 bucket_name            =  os.getenv("bucket_name")
+# raw_data_key           =  os.getenv("raw_data_key")
+raw_data_key           =  os.getenv("glue_table_name") 
+# raw_data_key, Set to same as table name, so the crawler can overwrite the existing table
+glue_role_arn          =  os.getenv("glue_role_arn")
 glue_database_name     =  os.getenv("glue_database_name")
 glue_table_name        =  os.getenv("glue_table_name")
 glue_crawler_name      =  os.getenv("glue_crawler_name")
@@ -77,7 +81,7 @@ def upload_data_to_s3(data):
         line_delimited_data = convert_to_line_delimited_json(data)
 
         # Define S3 object key
-        file_key = "raw-data/nba_player_data.jsonl"
+        file_key = f"{raw_data_key}/nba_player_data.jsonl"
 
         # Upload JSON data to S3
         s3_client.put_object(
@@ -106,7 +110,7 @@ def create_glue_table():
                         {"Name": "Height", "Type": "int"},
                         {"Name": "Weight", "Type": "int"},
                     ],
-                    "Location": f"s3://{bucket_name}/raw-data/",
+                    "Location": f"s3://{bucket_name}/{raw_data_key}/",
                     "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
                     "OutputFormat": "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat",
                     "SerdeInfo": {
@@ -125,30 +129,36 @@ def create_glue_crawler():
     try:
         glue_client.create_crawler(
             Name=glue_crawler_name,
-            Role='arn:aws:iam::902384303262:role/service-role/AWSGlueServiceRole-888',
+            Role=glue_role_arn,
             DatabaseName=glue_database_name,
             Description='to crawl my nba data',
             Targets={
                 'S3Targets': [
                     {
-                        'Path': f"s3://{bucket_name}/raw-data/",
+                        'Path': f"s3://{bucket_name}/{raw_data_key}/",
                     },
                 ],
             },
             # Schedule="cron(0 18 */2 * ? *)",
+            # TablePrefix="nba_",
             SchemaChangePolicy={
-            "UpdateBehavior": "UPDATE_IN_DATABASE",
-            "DeleteBehavior": "LOG" 
+                "UpdateBehavior": "UPDATE_IN_DATABASE",
+                "DeleteBehavior": "LOG" 
             },
+            # RecrawlPolicy={
+            #     "RecrawlBehavior": "CRAWL_NEW_FOLDERS_ONLY"
+            # }
+
 
         )
-    except glue_client.exceptions.EntityAlreadyExistsException:
-        print("Glue crawler 'nba_data_crawler' already exists.")
+    except glue_client.exceptions.AlreadyExistsException:
+        print(f"Glue crawler {glue_crawler_name} already exists.")
     except Exception as e:
         print(f"Error creating Glue crawler: {e}")
 
 
 def run_glue_crawler():
+    print("Running glue crawler...")
     try:
         glue_client.start_crawler(Name=glue_crawler_name)
         print(f"Glue crawler {glue_crawler_name} started successfully.")
@@ -178,11 +188,10 @@ def main():
     if nba_data:  # Only proceed if data was fetched successfully
         upload_data_to_s3(nba_data)
     create_glue_table()
-    # create_glue_crawler()
+    create_glue_crawler()
     configure_athena()
     print("Data lake setup complete.")
-    print("Running glue crawler...")
-    # run_glue_crawler()
+    run_glue_crawler() 
     
 
 if __name__ == "__main__":
