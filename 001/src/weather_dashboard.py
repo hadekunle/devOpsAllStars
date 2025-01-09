@@ -29,7 +29,7 @@ class WeatherDashboard:
 
     def fetch_weather(self, city):
         """Fetch weather data from OpenWeather API"""
-        base_url = "http://api.openweathermap.org/data/2.5/weather"
+        base_url = "https://api.openweathermap.org/data/2.5/weather"
         params = {
             "q": city,
             "appid": self.api_key,

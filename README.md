@@ -10,6 +10,8 @@
 | DAY | COMPLETE? | 
 | :---: | :---:|
 |1  |  ✅ [here](./001/README.md) |
-|2 |  ❌ |
+|2  |  ✅ [here](./002/README.md) |
+|3  |  ✅ [here](./003/README.md) |
+|30 |  ❌ |
 
 <!-- </details> -->
