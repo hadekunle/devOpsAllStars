@@ -13,16 +13,17 @@ load_dotenv()
 region                 =  os.getenv("region")
 bucket_name            =  os.getenv("bucket_name")
 glue_database_name     =  os.getenv("glue_database_name")
-athena_key             =  os.getenv("athena_key")
-athena_output_location =  f"s3://{bucket_name}/{athena_key}/"
+glue_table_name        =  os.getenv("glue_table_name")
+glue_crawler_name      =  os.getenv("glue_crawler_name")
+athena_output_location =  f"s3://{bucket_name}/athena-results/"
 
 # Sportsdata.io configurations (loaded from .env)
 api_key                = os.getenv("SPORTS_DATA_API_KEY")
 nba_endpoint           = os.getenv("NBA_ENDPOINT") 
 
 # Create AWS clients
-s3_client     = boto3.client("s3", region_name=region)
-glue_client   = boto3.client("glue", region_name=region)
+s3_client     = boto3.client("s3",     region_name=region)
+glue_client   = boto3.client("glue",   region_name=region)
 athena_client = boto3.client("athena", region_name=region)
 
 def create_s3_bucket():
@@ -94,7 +95,7 @@ def create_glue_table():
         glue_client.create_table(
             DatabaseName=glue_database_name,
             TableInput={
-                "Name": "nba_players",
+                "Name": glue_table_name,
                 "StorageDescriptor": {
                     "Columns": [
                         {"Name": "PlayerID", "Type": "int"},
@@ -115,15 +116,51 @@ def create_glue_table():
                 "TableType": "EXTERNAL_TABLE",
             },
         )
-        print(f"Glue table 'nba_players' created successfully.")
+        print(f"Glue table {glue_table_name} created successfully.")
     except Exception as e:
         print(f"Error creating Glue table: {e}")
+
+
+def create_glue_crawler():
+    try:
+        glue_client.create_crawler(
+            Name=glue_crawler_name,
+            Role='arn:aws:iam::902384303262:role/service-role/AWSGlueServiceRole-888',
+            DatabaseName=glue_database_name,
+            Description='to crawl my nba data',
+            Targets={
+                'S3Targets': [
+                    {
+                        'Path': f"s3://{bucket_name}/raw-data/",
+                    },
+                ],
+            },
+            # Schedule="cron(0 18 */2 * ? *)",
+            SchemaChangePolicy={
+            "UpdateBehavior": "UPDATE_IN_DATABASE",
+            "DeleteBehavior": "LOG" 
+            },
+
+        )
+    except glue_client.exceptions.EntityAlreadyExistsException:
+        print("Glue crawler 'nba_data_crawler' already exists.")
+    except Exception as e:
+        print(f"Error creating Glue crawler: {e}")
+
+
+def run_glue_crawler():
+    try:
+        glue_client.start_crawler(Name=glue_crawler_name)
+        print(f"Glue crawler {glue_crawler_name} started successfully.")
+    except Exception as e:
+        print(f"Error starting Glue crawler: {e}")
+
 
 def configure_athena():
     """Set up Athena output location."""
     try:
         athena_client.start_query_execution(
-            QueryString           = f"CREATE DATABASE IF NOT EXISTS {glue_database_name}",
+            QueryString           = f"SELECT * FROM {glue_database_name}.{glue_table_name}",
             QueryExecutionContext = {"Database": glue_database_name},
             ResultConfiguration   = {"OutputLocation": athena_output_location},
         )
@@ -141,8 +178,12 @@ def main():
     if nba_data:  # Only proceed if data was fetched successfully
         upload_data_to_s3(nba_data)
     create_glue_table()
+    # create_glue_crawler()
     configure_athena()
     print("Data lake setup complete.")
+    print("Running glue crawler...")
+    # run_glue_crawler()
+    
 
 if __name__ == "__main__":
     main()
