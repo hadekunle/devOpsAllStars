@@ -53,6 +53,7 @@ class WeatherDashboard:
         timestamp = datetime.now().strftime('%Y%m%d-%H%M%S')
         file_name = f"weather-data/{city}-{timestamp}.json"
         
+        
         try:
             weather_data['timestamp'] = timestamp
             self.s3_client.put_object(
@@ -66,13 +67,16 @@ class WeatherDashboard:
         except Exception as e:
             print(f"Error saving to S3: {e}")
             return False
+        finally:
+            with open(f"001/data/{file_name.replace('/','_')}",'w') as file:
+                file.write(json.dumps(weather_data))
 
 def main():
     dashboard = WeatherDashboard()
     dashboard.create_bucket_if_not_exists()
     
-    cities = ["Houston","Lagos"]
-    # cities = ["Philadelphia", "Seattle", "New York"]
+    # cities = ["Chicago" ]
+    cities = ["Philadelphia", "Seattle", "New York"]
     
     for city in cities:
         print(f"\nFetching weather for {city}...")
