@@ -66,7 +66,10 @@ python src/weather_dashboard.py
 - Git workflow for project development
 - Error handling in distributed systems
 - Cloud resource management
-- Future Enhancements
+
+
+### Future Enhancements
+```
 - Allow users to input list of cities
 - Allow user to select temperature units F or C 
 - Implement data visualization

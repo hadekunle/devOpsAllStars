@@ -1,18 +1,17 @@
 import json
 import os
+import sys
 import time
 
 import boto3
 import requests
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
 load_dotenv()
 
 # AWS configurations
 region                 =  os.getenv("region","us-east-1")
 bucket_name            =  os.getenv("bucket_name")
-# raw_data_key           =  os.getenv("raw_data_key")
 raw_data_key           =  os.getenv("glue_table_name") 
 # raw_data_key, Set to same as table name, so the crawler can overwrite the existing table
 glue_role_arn          =  os.getenv("glue_role_arn")
@@ -33,13 +32,10 @@ athena_client = boto3.client("athena", region_name=region)
 def create_s3_bucket():
     """Create an S3 bucket for storing sports data."""
     try:
-        if region == "us-east-1":
-            s3_client.create_bucket(Bucket=bucket_name)
-        else:
-            s3_client.create_bucket(
-                Bucket=bucket_name,
-                CreateBucketConfiguration={"LocationConstraint": region},
-            )
+        s3_client.create_bucket(
+            Bucket=bucket_name,
+            CreateBucketConfiguration={"LocationConstraint": region},
+        )
         print(f"S3 bucket '{bucket_name}' created successfully.")
     except Exception as e:
         print(f"Error creating S3 bucket: {e}")
@@ -182,16 +178,17 @@ def configure_athena():
 def main():
     print("Setting up data lake for NBA sports analytics...")
     create_s3_bucket()
-    time.sleep(5)  # Ensure bucket creation propagates
+    time.sleep(5)                # Ensure bucket creation propagates
     create_glue_database()
     nba_data = fetch_nba_data()
-    if nba_data:  # Only proceed if data was fetched successfully
-        upload_data_to_s3(nba_data)
+    if not nba_data:             # Only proceed if data was fetched successfully
+        sys.exit(1)                   #stop run if no data
+    upload_data_to_s3(nba_data)
     create_glue_table()
     create_glue_crawler()
     configure_athena()
-    print("Data lake setup complete.")
     run_glue_crawler() 
+    print("Data lake setup complete.")
     
 
 if __name__ == "__main__":
