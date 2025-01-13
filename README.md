@@ -2,15 +2,14 @@
 
 
 
-### DAILY PROGRESS 
+# DAILY PROGRESS 
 
 <!-- <details>
   <summary> CLICK TO EXPAND </summary> -->
 
-| PROJECT                   | COMPLETE?                   | 
-| :---:                     | :---:                       |
-|Weather Dashboard          |  ✅ [here](./001/README.md) |
-|Lambda, SNS notifications  |  ✅ [here](./002/README.md) |
-|NBA Datalake               |  ✅ [here](./003/README.md) |
-
+| PROJECT                   | ADE'S README                      | FAQ & TROUBLESHOOTING        | 
+| ---:                     | :---:                       | :---:                        |
+|Weather Dashboard          |  ✅ [here](./001/README.md) |  🔗 [here](./001/FAQ/README.md)  |
+|Lambda, SNS notifications  |  ✅ [here](./002/README.md) |  🔗 [here](./002/FAQ/README.md) |
+|NBA Datalake               |  ✅ [here](./003/README.md) |  🔗 [here](./003/FAQ/README.md) |
 <!-- </details> -->
