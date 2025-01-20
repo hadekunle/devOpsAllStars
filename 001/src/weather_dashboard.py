@@ -10,9 +10,10 @@ load_dotenv()
 
 class WeatherDashboard:
     def __init__(self):
-        self.api_key = os.getenv('OPENWEATHER_API_KEY')
+        self.api_key     = os.getenv('OPENWEATHER_API_KEY')
         self.bucket_name = os.getenv('AWS_BUCKET_NAME')
-        self.s3_client = boto3.client('s3')
+        self.region      = os.getenv('AWS_REGION')
+        self.s3_client   = boto3.client('s3')
 
     def create_bucket_if_not_exists(self):
         try:
@@ -22,7 +23,13 @@ class WeatherDashboard:
         except:
             print(f"Creating bucket {self.bucket_name}")
             try:
-                self.s3_client.create_bucket(Bucket=self.bucket_name)
+                if self.region == "us-east-1":
+                    self.s3_client.create_bucket(Bucket=self.bucket_name)
+                else:
+                    s3_client.create_bucket(
+                        Bucket=self.bucket_name,
+                        CreateBucketConfiguration={"LocationConstraint": self.region},
+                    )
                 print(f"Successfully created bucket {self.bucket_name}")
             except Exception as e:
                 print(f"Error creating bucket: {e}")
