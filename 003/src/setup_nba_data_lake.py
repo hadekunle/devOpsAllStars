@@ -32,10 +32,13 @@ athena_client = boto3.client("athena", region_name=region)
 def create_s3_bucket():
     """Create an S3 bucket for storing sports data."""
     try:
-        s3_client.create_bucket(
-            Bucket=bucket_name,
-            CreateBucketConfiguration={"LocationConstraint": region},
-        )
+        if region == "us-east-1":
+            s3_client.create_bucket(Bucket=bucket_name)
+        else:
+            s3_client.create_bucket(
+                Bucket=bucket_name,
+                CreateBucketConfiguration={"LocationConstraint": region},
+            )
         print(f"S3 bucket '{bucket_name}' created successfully.")
     except Exception as e:
         print(f"Error creating S3 bucket: {e}")
