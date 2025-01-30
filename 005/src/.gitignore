@@ -1,0 +1,35 @@
+# Ignore the .env file specifically in the src directory
+/src/.env
+
+# Alternatively, ignore any .env files within src if multiple exist
+# /src/*.env
+
+# General rule to ignore any .env files anywhere in the project
+.env
+.env.*  # For example, .env.local, .env.development, etc.
+
+# Ignore terrform variable files 
+*.tfvars
+*.tfvars.json
+
+# ----------------------------
+# Optional: Ignore Other Files
+# ----------------------------
+
+# macOS system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
+
+# VS Code settings folder
+.vscode/
+
+# Log files
+*.log
+
+# Node.js dependencies (if applicable)
+node_modules/
+
+# Python virtual environments (if applicable)
+venv/

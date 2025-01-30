@@ -1,0 +1,5 @@
+.env 
+*.png 
+*.md 
+.gitignore
+docker.sh
