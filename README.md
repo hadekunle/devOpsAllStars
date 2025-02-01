@@ -8,7 +8,7 @@
   <summary> CLICK TO EXPAND </summary> -->
 
 | PROJECT                  | ADE'S README                 |MEDIUM      | FAQ & TROUBLESHOOTING            |
-| :---:                     | :---:                        |:---:       | :---:                            |
+| :---                     | :---:                        |:---:       | :---:                            |
 |Weather Dashboard [video](https://www.youtube.com/watch?v=A95XBJFOqjw )                                  |  ✅ [here](./001_Weather_Dashboard/README.md)        |🔗  [here](https://medium.com/@hade.kunle/creating-a-weather-dashboard-system-with-python-and-openweather-api-4549040d3807)|   🔗 [here](./001/faq/README.md)   |
 |Lambda, SNS notifications [video](https://m.youtube.com/watch?v=09WfkKc0x_Q&t=1430s&pp=2AGWC5ACAQ%3D%3D) |  ✅ [here](./002_Lambda_SNS/README.md)               | Coming Soon                                                                                                               |   🔗 [here](./002/faq/README.md)   |
 |NBA Datalake [video](https://youtu.be/RAkMac2QgjM?si=G3byNMhZQtcf58lx)                                   |  ✅ [here](./003_NBA_Datalake/README.md)             | 🔗  [here](https://medium.com/@hade.kunle/creating-an-nba-datalake-using-python-and-opensource-api-558aeb6b8c8d)          |   🔗 [here](./003/faq/README.md)   |
