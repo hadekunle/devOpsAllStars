@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, render_template_string, request
-
+ 
 app = Flask(__name__)
 
 # Mocked JSON response data
