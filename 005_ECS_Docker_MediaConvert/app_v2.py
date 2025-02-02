@@ -1,9 +1,6 @@
 from flask import Flask, jsonify
 import requests
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 app = Flask(__name__)
 
@@ -26,29 +23,30 @@ def get_nfl_schedule():
         data = response.json()
 
         # Extract games from sports_results
-        game_spotlight = data.get("sports_results", {}).get("game_spotlight", [])
-        if not game_spotlight:
+        games = data.get("sports_results", {}).get("games", [])
+        if not games:
             return jsonify({"message": "No NFL schedule available.", "games": []}), 200
 
+        # Format the schedule into JSON
         formatted_games = []
-        teams = game_spotlight.get("teams", [])
+        for game in games:
+            teams = game.get("teams", [])
+            if len(teams) == 2:
+                away_team = teams[0].get("name", "Unknown")
+                home_team = teams[1].get("name", "Unknown")
+            else:
+                away_team, home_team = "Unknown", "Unknown"
 
-        if len(teams) == 2:
-            away_team = teams[0].get("name", "Unknown")
-            home_team = teams[1].get("name", "Unknown")
-        else:
-            away_team, home_team = "Unknown", "Unknown"
+            game_info = {
+                "away_team": away_team,
+                "home_team": home_team,
+                "venue": game.get("venue", "Unknown"),
+                "date": game.get("date", "Unknown"),
+                "time": f"{game.get('time', 'Unknown')} ET" if game.get("time", "Unknown") != "Unknown" else "Unknown"
+            }
+            formatted_games.append(game_info)
 
-        game_info = {
-            "away_team": away_team,
-            "home_team": home_team,
-            "venue": game_spotlight.get("venue", "Unknown"),
-            "date": game_spotlight.get("date", "Unknown"),
-            "time": f"{game_spotlight.get('time', 'Unknown')} ET" if game_spotlight.get("time", "Unknown") != "Unknown" else "Unknown"
-        }
-
-
-        return jsonify({"message": "NFL schedule fetched successfully.", "games": game_info}), 200
+        return jsonify({"message": "NFL schedule fetched successfully.", "games": formatted_games}), 200
     
     except Exception as e:
         return jsonify({"message": "An error occurred.", "error": str(e)}), 500

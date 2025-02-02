@@ -105,7 +105,7 @@ def create_job():
         print("MediaConvert job created successfully:")
 
         # Pretty-print the JSON response from MediaConvert
-        print(json.dumps(response, indent=4))
+        print(json.dumps(response, indent=4,default=str))
 
     except Exception as e:
         # Catch any exceptions that occur during job creation and print an error message

@@ -160,7 +160,7 @@ aws mediaconvert describe-endpoints
 ```bash
 chmod 600 .env
 ```
-## **Step 6: Locally Buikd & Run The Docker Container**
+## **Step 6: Locally Build & Run The Docker Container**
 Run:
 ```bash
 docker build -t highlight-processor .
