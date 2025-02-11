@@ -1,0 +1,43 @@
+{
+  "family": "${TASK_FAMILY}",
+  "networkMode": "awsvpc",
+  "executionRoleArn": "${EXECUTION_ROLE_ARN}",
+  "taskRoleArn": "${TASK_ROLE_ARN}",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "${TASK_CPU}",
+  "memory": "${TASK_MEMORY}",
+  "containerDefinitions": [
+    {
+      "name": "${CONTAINER_NAME}",
+      "image": "${ECR_IMAGE}",
+      "essential": true,
+      "environment": [
+        { "name": "API_URL", "value": "${API_URL}" },
+        { "name": "RAPIDAPI_HOST", "value": "${RAPIDAPI_HOST}" },
+        { "name": "RAPIDAPI_KEY", "value": "${RAPIDAPI_KEY}" },
+        { "name": "LEAGUE_NAME", "value": "${LEAGUE_NAME}" },
+        { "name": "LIMIT", "value": "${LIMIT}" },
+        { "name": "S3_BUCKET_NAME", "value": "${S3_BUCKET_NAME}" },
+        { "name": "AWS_REGION", "value": "${AWS_REGION}" },
+        { "name": "DYNAMODB_TABLE", "value": "${DYNAMODB_TABLE}" },
+        { "name": "MEDIACONVERT_ENDPOINT", "value": "${MEDIACONVERT_ENDPOINT}" },
+        { "name": "MEDIACONVERT_ROLE_ARN", "value": "${MEDIACONVERT_ROLE_ARN}" },
+        { "name": "INPUT_KEY", "value": "${INPUT_KEY}" },
+        { "name": "OUTPUT_KEY_PREFIX", "value": "${OUTPUT_KEY_PREFIX}" },
+        { "name": "RETRY_COUNT", "value": "${RETRY_COUNT}" },
+        { "name": "RETRY_DELAY", "value": "${RETRY_DELAY}" },
+        { "name": "WAIT_TIME_BETWEEN_SCRIPTS", "value": "${WAIT_TIME_BETWEEN_SCRIPTS}" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "${AWSLOGS_GROUP}",
+          "awslogs-region": "${AWS_REGION}",
+          "awslogs-stream-prefix": "${AWSLOGS_STREAM_PREFIX}"
+        }
+      }
+    }
+  ]
+}
