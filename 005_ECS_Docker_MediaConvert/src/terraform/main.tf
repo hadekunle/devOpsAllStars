@@ -25,3 +25,23 @@ provider "aws" {
 locals {
   current_account_id = data.aws_caller_identity.current.account_id
 }
+
+# resource "null_resource" "chmod_script" {
+#   provisioner "local-exec" {
+#     command = "chmod +x ../run_all.sh"
+#   }
+# }
+
+# resource "null_resource" "docker_build_push" {
+#   provisioner "local-exec" {
+#     command = "../run_all.sh ${local.current_account_id} ${var.aws_region} ${aws_ecr_repository.this.repository_url} ${var.image_tag}"
+#   }
+
+#   depends_on = [null_resource.chmod_script, aws_ecr_repository.this]
+
+
+#   triggers = {
+#     task_run_id = timestamp()
+#   }
+
+# }

@@ -1,4 +1,10 @@
-resource "aws_ecr_repository" "this" {
-  name                 = var.ecr_repository_name
-  image_tag_mutability = "MUTABLE"
+# resource "aws_ecr_repository" "this" {
+#   name                 = var.ecr_repository_name
+#   image_tag_mutability = "MUTABLE"
+# }
+
+
+data "aws_ecr_repository" "this" {
+  name = "highlight-pipeline2"
 }
+

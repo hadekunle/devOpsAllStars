@@ -50,7 +50,7 @@ def process_one_video():
 
         # Extract the first video URL from the JSON data
         # Adjust the key path ('["data"][0]["url"]') based on the actual structure of your JSON
-        video_url = highlights["data"][0]["url"]
+        video_url = highlights["data"][1]["url"]
 
         # Inform the user about the video URL being processed
         print(f"Processing video URL: {video_url}")

@@ -1,6 +1,6 @@
 [
   {
-    "name": "highlight-pipeline",
+    "name": "${task_name}",
     "image": "${ecr_image_url}",
     "essential": true,
     "logConfiguration": {
