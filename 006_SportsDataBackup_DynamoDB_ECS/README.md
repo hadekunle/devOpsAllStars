@@ -78,7 +78,6 @@ Optional - Verify the variables are loaded
 ```bash
 echo $AWS_LOGS_GROUP
 echo $TASK_FAMILY
-echo $AWS_ACCOUNT_ID
 ```
 ## **Step 4: Generate Final JSON Files from Templates**
 1. ECS Task Definition
@@ -97,7 +96,7 @@ envsubst < ecsTarget.template.json > ecsTarget.json
 ```bash
 envsubst < ecseventsrole-policy.template.json > ecseventsrole-policy.json
 ```
-*Optional - Open the gnerated files using cat or a text editor to confirm that all place holders have been correctly replaced
+*Optional - Open the generated files using cat or a text editor to confirm that all place holders have been correctly replaced
 
 ## **Step 5: Build and Push Docker Image**
 1. Create an ECR Repo
@@ -155,11 +154,19 @@ aws events put-rule --name SportsBackupScheduleRule --schedule-expression "rate(
 ```bash
 aws events put-targets --rule SportsBackupScheduleRule --targets file://ecsTarget.json --region ${AWS_REGION}
 ```
+
+## **Step 7.5: Create ECS Cluster**
+```bash
+aws ecs create-cluster \
+  --cluster-name sports-backup-cluster \
+  --region us-east-1
+```
+
 ## **Step 8: Manually Test ECS Task**
 ```bash
 aws ecs run-task \
   --cluster sports-backup-cluster \
-  --launch-type Fargate \
+  --launch-type FARGATE \
   --task-definition ${TASK_FAMILY} \
   --network-configuration "awsvpcConfiguration={subnets=[\"${SUBNET_ID}\"],securityGroups=[\"${SECURITY_GROUP_ID}\"],assignPublicIp=\"ENABLED\"}" \
   --region ${AWS_REGION}
