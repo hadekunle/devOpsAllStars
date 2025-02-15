@@ -38,7 +38,7 @@ def main():
         time.sleep(WAIT_TIME_BETWEEN_SCRIPTS)
 
         # Step 2: Run process_one_video.py (now processing all video URLs)
-        run_script("process_one_video.py")
+        run_script("process_videos.py")
 
         print("Waiting for resources to stabilize...")
         time.sleep(WAIT_TIME_BETWEEN_SCRIPTS)

@@ -43,6 +43,7 @@ def save_to_s3(data, file_name):
     """
     Save data to an S3 bucket.
     """
+    print("Saving highlights to S3...")
     try:
         s3 = boto3.client("s3", region_name=AWS_REGION)
 
@@ -74,11 +75,47 @@ def save_to_s3(data, file_name):
     except Exception as e:
         print(f"Error saving to S3: {e}")
 
+def create_dynamodb_table():
+    # Create a DynamoDB service client
+    print('Creating dynamodb table')
+    dynamodb = boto3.client('dynamodb', region_name=AWS_REGION)
+
+    # Define the table creation parameters
+    table_name = DYNAMODB_TABLE
+    attribute_definitions = [
+        {
+            'AttributeName': 'id',
+            'AttributeType': 'S'  # String type attribute
+        }
+    ]
+    key_schema = [
+        {
+            'AttributeName': 'id',
+            'KeyType': 'HASH'  # Partition key
+        }
+    ]
+    provisioned_throughput = {
+        'ReadCapacityUnits': 1,
+        'WriteCapacityUnits': 1
+    }
+
+    # Create the DynamoDB table
+    response = dynamodb.create_table(
+        TableName=table_name,
+        AttributeDefinitions=attribute_definitions,
+        KeySchema=key_schema,
+        ProvisionedThroughput=provisioned_throughput
+    )
+    
+    print(response)
+
+
 def store_highlights_to_dynamodb(highlights):
     """
     Store each highlight record into a DynamoDB table.
     Assumes that 'highlights' is a dict with a "data" key that is a list of records.
     """
+    print("Storing highlights in DynamoDB...")
     try:
         dynamodb = boto3.resource("dynamodb", region_name=AWS_REGION)
         table = dynamodb.Table(DYNAMODB_TABLE)
@@ -110,10 +147,13 @@ def process_highlights():
     """
     print("Fetching highlights...")
     highlights = fetch_highlights()
+
     if highlights:
-        print("Saving highlights to S3...")
         save_to_s3(highlights, "basketball_highlights")
-        print("Storing highlights in DynamoDB...")
+        try:
+            create_dynamodb_table()
+        except:
+            print('Table already exists')
         store_highlights_to_dynamodb(highlights)
 
 if __name__ == "__main__":

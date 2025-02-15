@@ -5,9 +5,10 @@
         "Sid": "S3BucketList",
         "Effect": "Allow",
         "Action": [
-          "s3:ListBucket"
+          "s3:ListBucket",
+          "s3:CreateBucket"
         ],
-        "Resource": "arn:aws:s3:::${S3_BUCKET_NAME}"
+        "Resource": "arn:aws:s3:::ade123-newhighlight-final"
       },
       {
         "Sid": "S3ObjectActions",
@@ -17,7 +18,7 @@
           "s3:PutObject",
           "s3:DeleteObject"
         ],
-        "Resource": "arn:aws:s3:::${S3_BUCKET_NAME}/*"
+        "Resource": "arn:aws:s3:::ade123-newhighlight-final/*"
       },
       {
         "Sid": "DynamoDBTableActions",
@@ -27,9 +28,10 @@
           "dynamodb:GetItem",
           "dynamodb:UpdateItem",
           "dynamodb:Query",
-          "dynamodb:Scan"
+          "dynamodb:Scan",
+          "dynamodb:CreateTable"
         ],
-        "Resource": "arn:aws:dynamodb:${AWS_REGION}:${AWS_ACCOUNT_ID}:table/${DYNAMODB_TABLE}"
+        "Resource": "arn:aws:dynamodb:us-east-1:902384303262:table/SportsHighlights"
       }
     ]
   }
