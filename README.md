@@ -16,6 +16,7 @@
 |Game Highlight Processor [video](https://youtu.be/_jWCW4T138o?si=Fn3d0KndCh2CAUUc)                     |  ✅ [here](./005_ECS_Docker_MediaConvert/README.md)  | 🔗  Coming Soon                                                                                                           |   🔗 [here](./005_ECS_Docker_MediaConvert/faq/README.md)   |
 |Game Highlight Processor Terraformed [video](https://youtu.be/TBUFSbbtq2E?si=ZCD4tDhu_73rVk4r)                     |  ✅ [here](./005_ECS_Docker_MediaConvert/README.md)  | 🔗  Coming Soon                                                                                                           |   🔗 [here](./005_ECS_Docker_MediaConvert/faq/README.md)   |
 |Sports Data Backup - DynamoDB, ECS, MediaConvert [video](https://youtu.be/kd6TTKUWJJE?si=YFLmAo05RznweR40)               |  ✅ [here](./006_SportsDataBackup_DynamoDB_ECS/README.md)                          | 🔗  Coming Soon                                                                                                           |   🔗 [here](./006_SportsDataBackup_DynamoDB_ECS/faq/README.md)   |
+|Automating a Game Day Notification Sol.  [video](https://www.youtube.com/watch?v=Yy0quTcqBC0)               |  ✅ [here](./007_Lambda_SNS_Terraform/README.md)                          | 🔗  Coming Soon                                                                                                           |   🔗 [here](./007_Lambda_SNS_Terraform/faq/README.md)   |
 <!-- </details> -->
 
 
